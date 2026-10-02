@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard - Scan Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>PhishGuard</h2>
+
+        <nav>
+            <a href="{{ url_for('home') }}">Dashboard</a>
+            <a href="{{ url_for('scanner') }}">URL Scanner</a>
+            <a href="{{ url_for('history') }}" class="active">Scan History</a>
+            <a href="{{ url_for('analytics') }}">Analytics</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+        </nav>
+    </aside>
+
+    <header class="top-header">
+        <div>
+            <h1>PhishGuard</h1>
+            <p>Scan Details</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="card">
+            <h2>Scan Details</h2>
+            <p>Detailed security analysis for the selected URL.</p>
+        </div>
+
+        <div class="card">
+            <h2>URL Information</h2>
+
+            <div class="details-grid">
+
+                <div class="detail-box">
+                    <span>Scanned URL</span>
+                    <strong class="break-url">{{ scan.url }}</strong>
+                </div>
+
+                <div class="detail-box">
+                    <span>Scanned At</span>
+                    <strong>{{ scan.scanned_at or "Not available" }}</strong>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+
+            <h2>Risk Assessment</h2>
+
+            <div class="details-grid">
+
+                <div class="detail-box">
+                    <span>Risk Score</span>
+                    <strong class="large-score">{{ scan.score }}</strong>
+                </div>
+
+                <div class="detail-box">
+                    <span>Result</span>
+
+                    {% if scan.result == "No Obvious Warning" %}
+                        <strong class="low-text">{{ scan.result }}</strong>
+                    {% elif scan.result == "Needs Review" %}
+                        <strong class="medium-text">{{ scan.result }}</strong>
+                    {% else %}
+                        <strong class="high-text">{{ scan.result }}</strong>
+                    {% endif %}
+
+                </div>
+
+                <div class="detail-box">
+                    <span>Risk Level</span>
+
+                    {% if scan.score == 0 %}
+                        <strong class="low-text">LOW</strong>
+                    {% elif scan.score <= 2 %}
+                        <strong class="medium-text">MEDIUM</strong>
+                    {% else %}
+                        <strong class="high-text">HIGH</strong>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="risk-meter">
+
+                <div class="risk-meter-header">
+                    <strong>Risk Score Indicator</strong>
+                    <span>{{ scan.score }} / 10</span>
+                </div>
+
+                <div class="risk-meter-background">
+
+                    <div
+                        class="risk-meter-fill
+                        {% if scan.score == 0 %}
+                            low-meter
+                        {% elif scan.score <= 2 %}
+                            medium-meter
+                        {% else %}
+                            high-meter
+                        {% endif %}"
+                        style="width: {{ (scan.score / 10 * 100) }}%;">
+                    </div>
+
+                </div>
+
+                <p class="risk-meter-note">
+                    This visual represents the current rule-based risk score.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Detected Indicators</h2>
+
+            {% if scan.reasons and scan.reasons != "No suspicious indicators detected" %}
+
+                <div class="indicator-list">
+
+                    {% for reason in scan.reasons.split("; ") %}
+
+                        <div class="indicator-item">
+
+                            <span class="indicator-icon">⚠</span>
+
+                            <div>
+                                <strong>Security Indicator</strong>
+                                <p>{{ reason }}</p>
+                            </div>
+
+                            <span class="indicator-badge">
+                                Review
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="no-warning">
+
+                    <strong>✓ No suspicious indicators detected</strong>
+
+                    <p>
+                        The current rule-based checks did not find
+                        any warning signs.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="card">
+
+            <div class="scanner-note">
+
+                <strong>Important:</strong>
+
+                <p>
+                    PhishGuard uses rule-based URL indicators.
+                    A high risk score does not by itself prove
+                    that a website is malicious, and a low score
+                    does not guarantee that a website is safe.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="card action-card">
+
+            <a
+                href="{{ url_for('export_scan', scan_id=scan.id) }}"
+                class="export-button">
+                ↓ Export Scan Report
+            </a>
+
+            <a
+                href="{{ url_for('history') }}"
+                class="back-button">
+                ← Back to Scan History
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

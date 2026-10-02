@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PhishGuard - Analytics</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>PhishGuard</h2>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('scanner') }}">
+                URL Scanner
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                Scan History
+            </a>
+
+            <a href="{{ url_for('analytics') }}" class="active">
+                Analytics
+            </a>
+
+            <a href="{{ url_for('settings') }}">
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- Header -->
+
+    <header class="top-header">
+
+        <div>
+
+            <h1>PhishGuard</h1>
+
+            <p>
+                Security Analytics
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main class="container">
+
+
+        <!-- Analytics Introduction -->
+
+        <div class="card">
+
+            <h2>
+                Scan Analytics
+            </h2>
+
+            <p>
+                Overview of the URLs scanned by PhishGuard
+                using rule-based security indicators.
+            </p>
+
+        </div>
+
+
+        <!-- Statistics -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Scans
+                </h3>
+
+                <p>
+                    {{ total_scans }}
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Low Risk
+                </h3>
+
+                <p>
+                    {{ safe_scans }}
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Medium Risk
+                </h3>
+
+                <p>
+                    {{ review_scans }}
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    High Risk
+                </h3>
+
+                <p>
+                    {{ suspicious_scans }}
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Risk Distribution -->
+
+        <div class="card">
+
+            <h2>
+                Risk Distribution
+            </h2>
+
+            <p>
+                Distribution of scanned URLs according to
+                their rule-based risk level.
+            </p>
+
+
+            <div class="chart-container">
+
+
+                <!-- Low Risk -->
+
+                <div class="chart-bar">
+
+                    <div class="bar-label">
+
+                        <span>
+                            Low Risk
+                        </span>
+
+                        <strong>
+                            {{ safe_scans }}
+                            ({{ ((safe_scans / total_scans) * 100)|round(1) if total_scans else 0 }}%)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="bar-background">
+
+                        <div
+                            class="bar low-bar"
+                            style="width: {{ (safe_scans / total_scans * 100) if total_scans else 0 }}%;"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Medium Risk -->
+
+                <div class="chart-bar">
+
+                    <div class="bar-label">
+
+                        <span>
+                            Medium Risk
+                        </span>
+
+                        <strong>
+                            {{ review_scans }}
+                            ({{ ((review_scans / total_scans) * 100)|round(1) if total_scans else 0 }}%)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="bar-background">
+
+                        <div
+                            class="bar medium-bar"
+                            style="width: {{ (review_scans / total_scans * 100) if total_scans else 0 }}%;"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- High Risk -->
+
+                <div class="chart-bar">
+
+                    <div class="bar-label">
+
+                        <span>
+                            High Risk
+                        </span>
+
+                        <strong>
+                            {{ suspicious_scans }}
+                            ({{ ((suspicious_scans / total_scans) * 100)|round(1) if total_scans else 0 }}%)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="bar-background">
+
+                        <div
+                            class="bar high-bar"
+                            style="width: {{ (suspicious_scans / total_scans * 100) if total_scans else 0 }}%;"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Analytics Summary -->
+
+        <div class="card">
+
+            <h2>
+                Analytics Summary
+            </h2>
+
+            <div class="analysis-info">
+
+                <div>
+
+                    <strong>
+                        Total URLs Analyzed
+                    </strong>
+
+                    <p>
+                        {{ total_scans }} URL(s) have been
+                        analyzed by PhishGuard.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Current Detection Method
+                    </strong>
+
+                    <p>
+                        PhishGuard uses rule-based URL
+                        indicators such as suspicious
+                        keywords, HTTP usage, IP addresses,
+                        unusual characters and URL structure.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Recent Scans -->
+
+        <div class="card">
+
+            <h2>
+                Recent Scans
+            </h2>
+
+            {% if scan_history %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Scanned At
+                            </th>
+
+                            <th>
+                                URL
+                            </th>
+
+                            <th>
+                                Risk Score
+                            </th>
+
+                            <th>
+                                Risk Level
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for scan in scan_history[:10] %}
+
+                        <tr>
+
+                            <td>
+                                {{ scan.scanned_at or "Older Scan" }}
+                            </td>
+
+
+                            <td class="url-cell">
+
+                                <a
+                                    href="{{ url_for('scan_details', scan_id=scan.id) }}"
+                                    class="scan-link"
+                                >
+                                    {{ scan.url }}
+                                </a>
+
+                            </td>
+
+
+                            <td>
+                                {{ scan.score }} / 10
+                            </td>
+
+
+                            <td>
+
+                                {% if scan.score == 0 %}
+
+                                    <span class="risk-level low-level">
+                                        Low
+                                    </span>
+
+                                {% elif scan.score <= 2 %}
+
+                                    <span class="risk-level medium-level">
+                                        Medium
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="risk-level high-level">
+                                        High
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="no-warning">
+
+                <strong>
+                    No scans available
+                </strong>
+
+                <p>
+                    Scan a URL to generate analytics data.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Important Note -->
+
+        <div class="card">
+
+            <div class="scanner-note">
+
+                <strong>Important:</strong>
+
+                <p>
+                    Analytics are based on PhishGuard's
+                    rule-based indicators. A risk category
+                    is an indicator for further review and
+                    does not by itself prove that a website
+                    is malicious or safe.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</body>
+
+</html>

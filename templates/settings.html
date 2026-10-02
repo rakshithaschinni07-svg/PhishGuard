@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PhishGuard - Settings</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>PhishGuard</h2>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('scanner') }}">
+                URL Scanner
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                Scan History
+            </a>
+
+            <a href="{{ url_for('analytics') }}">
+                Analytics
+            </a>
+
+            <a href="{{ url_for('settings') }}" class="active">
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- Header -->
+
+    <header class="top-header">
+
+        <div>
+
+            <h1>PhishGuard</h1>
+
+            <p>
+                Security Settings
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main class="container">
+
+
+        <!-- Introduction -->
+
+        <div class="card">
+
+            <h2>
+                Detection Settings
+            </h2>
+
+            <p>
+                These are the rule-based indicators currently used
+                by PhishGuard to analyze potentially suspicious URLs.
+            </p>
+
+        </div>
+
+
+        <!-- Detection Rules -->
+
+        <div class="card">
+
+            <h2>
+                URL Detection Rules
+            </h2>
+
+            <div class="settings-list">
+
+
+                <!-- Rule 1 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            @ Symbol
+                        </h3>
+
+                        <p>
+                            Detects URLs containing the @ symbol,
+                            which can sometimes make a URL misleading.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +2
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 2 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Multiple Hyphens
+                        </h3>
+
+                        <p>
+                            Detects URLs containing three or more
+                            hyphens.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 3 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Security-related Keywords
+                        </h3>
+
+                        <p>
+                            Detects keywords such as login, verify,
+                            account, secure, update and password.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 4 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Long URL
+                        </h3>
+
+                        <p>
+                            Detects URLs longer than 100 characters.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 5 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            HTTP Connection
+                        </h3>
+
+                        <p>
+                            Detects URLs using HTTP instead of HTTPS.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 6 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            IP Address
+                        </h3>
+
+                        <p>
+                            Detects URLs that use an IP address
+                            instead of a domain name.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +2
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 7 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Non-standard Port
+                        </h3>
+
+                        <p>
+                            Detects ports other than the standard
+                            HTTP port 80 and HTTPS port 443.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 8 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Multiple Subdomains
+                        </h3>
+
+                        <p>
+                            Detects URLs containing multiple
+                            subdomain levels.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+                <!-- Rule 9 -->
+
+                <div class="setting-item">
+
+                    <div>
+
+                        <h3>
+                            Unusual Domain Characters
+                        </h3>
+
+                        <p>
+                            Detects characters in the domain that
+                            are outside the standard letters,
+                            numbers, dots and hyphens.
+                        </p>
+
+                    </div>
+
+                    <span class="rule-score">
+                        +1
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Risk Levels -->
+
+        <div class="card">
+
+            <h2>
+                Risk Levels
+            </h2>
+
+
+            <div class="risk-settings">
+
+
+                <div class="risk-setting">
+
+                    <span class="risk-level low-level">
+                        Low
+                    </span>
+
+                    <p>
+                        Score: 0
+                    </p>
+
+                </div>
+
+
+                <div class="risk-setting">
+
+                    <span class="risk-level medium-level">
+                        Medium
+                    </span>
+
+                    <p>
+                        Score: 1–2
+                    </p>
+
+                </div>
+
+
+                <div class="risk-setting">
+
+                    <span class="risk-level high-level">
+                        High
+                    </span>
+
+                    <p>
+                        Score: 3+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Scoring Information -->
+
+        <div class="card">
+
+            <h2>
+                How Risk Scoring Works
+            </h2>
+
+            <p>
+                Each detected indicator contributes points to the
+                URL's risk score. Indicators with stronger warning
+                characteristics contribute more points.
+            </p>
+
+            <p>
+                The current risk categories are:
+            </p>
+
+            <ul class="settings-info-list">
+
+                <li>
+                    <strong>0 points:</strong>
+                    No Obvious Warning
+                </li>
+
+                <li>
+                    <strong>1–2 points:</strong>
+                    Needs Review
+                </li>
+
+                <li>
+                    <strong>3 or more points:</strong>
+                    Potentially Suspicious
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Project Information -->
+
+        <div class="card">
+
+            <h2>
+                About PhishGuard
+            </h2>
+
+            <p>
+                PhishGuard is a defensive cybersecurity project
+                designed to analyze URLs using rule-based security
+                indicators.
+            </p>
+
+            <p>
+                The project uses Python and Flask for the backend,
+                HTML and CSS for the frontend, and SQLite for
+                storing scan history.
+            </p>
+
+            <p>
+                The analysis is intended for educational and
+                security-awareness purposes.
+            </p>
+
+        </div>
+
+
+        <!-- Important Note -->
+
+        <div class="card">
+
+            <div class="scanner-note">
+
+                <strong>Important:</strong>
+
+                <p>
+                    A high risk score does not by itself prove that
+                    a website is malicious, and a low score does not
+                    guarantee that a website is safe. Results should
+                    be treated as indicators for further review.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PhishGuard - Scan History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>PhishGuard</h2>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('scanner') }}">
+                URL Scanner
+            </a>
+
+            <a href="{{ url_for('history') }}"
+               class="active">
+                Scan History
+            </a>
+
+            <a href="{{ url_for('analytics') }}">
+                Analytics
+            </a>
+
+            <a href="{{ url_for('settings') }}">
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div>
+
+            <h1>PhishGuard</h1>
+
+            <p>Scan History</p>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <!-- PAGE HEADER -->
+
+        <div class="card">
+
+            <div class="history-header">
+
+                <div>
+
+                    <h2>Scan History</h2>
+
+                    <p>
+                        View previous URL security scans and
+                        their detected indicators.
+                    </p>
+
+                </div>
+
+
+                {% if scan_history %}
+
+                <form method="POST"
+                      action="{{ url_for('clear_history') }}"
+                      onsubmit="return confirm('Are you sure you want to clear all scan history? This cannot be undone.');">
+
+                    <button type="submit"
+                            class="clear-button">
+
+                        Clear History
+
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- HISTORY TABLE -->
+
+        <div class="card">
+
+            {% if scan_history %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Scanned At</th>
+
+                            <th>URL</th>
+
+                            <th>Risk Score</th>
+
+                            <th>Result</th>
+
+                            <th>Risk Level</th>
+
+                            <th>Reasons</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for scan in scan_history %}
+
+                        <tr>
+
+                            <!-- TIME -->
+
+                            <td>
+                                {{ scan.scanned_at or "Older Scan" }}
+                            </td>
+
+
+                            <!-- CLICKABLE URL -->
+
+                            <td class="url-cell">
+
+                                <a href="{{ url_for('scan_details', scan_id=scan.id) }}"
+                                   class="scan-link">
+
+                                    {{ scan.url }}
+
+                                </a>
+
+                            </td>
+
+
+                            <!-- SCORE -->
+
+                            <td>
+
+                                <strong>
+                                    {{ scan.score }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- RESULT -->
+
+                            <td>
+
+                                {% if scan.result == "No Obvious Warning" %}
+
+                                    <span class="status safe-status">
+                                        Safe
+                                    </span>
+
+                                {% elif scan.result == "Needs Review" %}
+
+                                    <span class="status warning-status">
+                                        Needs Review
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status danger-status">
+                                        Suspicious
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- RISK LEVEL -->
+
+                            <td>
+
+                                {% if scan.score == 0 %}
+
+                                    <span class="risk-level low-level">
+                                        Low
+                                    </span>
+
+                                {% elif scan.score <= 2 %}
+
+                                    <span class="risk-level medium-level">
+                                        Medium
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="risk-level high-level">
+                                        High
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- REASONS -->
+
+                            <td class="reason-cell">
+
+                                {% if scan.reasons %}
+
+                                    {% if scan.reasons == "No suspicious indicators detected" %}
+
+                                        <span class="old-reason">
+                                            No suspicious indicators detected
+                                        </span>
+
+                                    {% else %}
+
+                                        {{ scan.reasons }}
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="old-reason">
+                                        Not available
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <!-- EMPTY HISTORY -->
+
+            <div class="no-warning">
+
+                <strong>
+                    No scan history available
+                </strong>
+
+                <p>
+                    Scan a URL to create your first
+                    security scan record.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="card">
+
+            <h2>About Scan History</h2>
+
+            <p>
+                Each scan is stored in the local SQLite database
+                with its URL, risk score, result, timestamp and
+                detected indicators.
+            </p>
+
+            <p style="margin-top: 10px;">
+                Click any URL above to open its detailed scan report.
+            </p>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

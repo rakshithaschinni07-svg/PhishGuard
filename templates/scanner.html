@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PhishGuard - URL Scanner</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>PhishGuard</h2>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('scanner') }}" class="active">
+                URL Scanner
+            </a>
+
+            <a href="{{ url_for('history') }}">
+                Scan History
+            </a>
+
+            <a href="{{ url_for('analytics') }}">
+                Analytics
+            </a>
+
+            <a href="{{ url_for('settings') }}">
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div>
+
+            <h1>PhishGuard</h1>
+
+            <p>
+                URL Security Scanner
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+
+        <!-- SCANNER -->
+
+        <div class="card">
+
+            <h2>
+                🔍 Scan a Website URL
+            </h2>
+
+            <p>
+                Enter a website URL below to check
+                for suspicious security indicators.
+            </p>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('scan') }}"
+            >
+
+                <input
+                    type="text"
+                    name="url"
+                    placeholder="https://example.com"
+                    value="{{ url if url else '' }}"
+                    required
+                >
+
+                <button type="submit">
+                    Scan URL
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        {% if error %}
+
+        <div class="card">
+
+            <div class="result danger">
+
+                <p>
+
+                    <strong>
+                        Invalid URL
+                    </strong>
+
+                </p>
+
+                <p>
+                    {{ error }}
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- SCAN RESULT -->
+
+        {% if result %}
+
+        <div class="card">
+
+            <h2>
+                Scan Summary
+            </h2>
+
+
+            <!-- RESULT STATUS -->
+
+            <div
+                class="
+                    result
+                    {% if score == 0 %}
+                        safe
+                    {% elif score <= 2 %}
+                        warning
+                    {% else %}
+                        danger
+                    {% endif %}
+                "
+            >
+
+                <p>
+
+                    <strong>
+                        Scanned URL:
+                    </strong>
+
+                </p>
+
+                <p class="scanned-url">
+                    {{ url }}
+                </p>
+
+
+                <div class="scan-summary-grid">
+
+
+                    <!-- RISK SCORE -->
+
+                    <div class="summary-box">
+
+                        <span>
+                            Risk Score
+                        </span>
+
+                        <strong>
+                            {{ score }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- RESULT -->
+
+                    <div class="summary-box">
+
+                        <span>
+                            Result
+                        </span>
+
+                        <strong>
+                            {{ result }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- RISK LEVEL -->
+
+                    <div class="summary-box">
+
+                        <span>
+                            Risk Level
+                        </span>
+
+
+                        {% if score == 0 %}
+
+                            <strong class="low-text">
+                                LOW
+                            </strong>
+
+                        {% elif score <= 2 %}
+
+                            <strong class="medium-text">
+                                MEDIUM
+                            </strong>
+
+                        {% else %}
+
+                            <strong class="high-text">
+                                HIGH
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- DETECTED INDICATORS -->
+
+            <div class="reasons">
+
+                <h3>
+                    Detected Indicators
+                </h3>
+
+
+                {% if reasons %}
+
+                    <ul>
+
+                        {% for reason in reasons %}
+
+                            <li>
+                                {{ reason }}
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <div class="no-warning">
+
+                        <strong>
+                            ✓ No suspicious indicators detected
+                        </strong>
+
+                        <p>
+                            The current rule-based checks
+                            did not find any warning signs.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- SAFETY NOTE -->
+
+            <div class="scanner-note">
+
+                <strong>
+                    Important:
+                </strong>
+
+                <p>
+                    PhishGuard uses rule-based URL
+                    indicators. A high risk score does
+                    not by itself prove that a website
+                    is malicious, and a low score does
+                    not guarantee that a website is safe.
+                </p>
+
+            </div>
+
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- HOW IT WORKS -->
+
+        <div class="card">
+
+            <h2>
+                How URL Analysis Works
+            </h2>
+
+            <div class="analysis-info">
+
+                <div>
+                    <strong>1. URL Validation</strong>
+                    <p>
+                        Checks whether the entered URL
+                        uses HTTP or HTTPS and has a
+                        valid network location.
+                    </p>
+                </div>
+
+
+                <div>
+                    <strong>2. Security Indicators</strong>
+                    <p>
+                        Checks for patterns such as
+                        IP addresses, suspicious symbols,
+                        long URLs and unusual ports.
+                    </p>
+                </div>
+
+
+                <div>
+                    <strong>3. Risk Score</strong>
+                    <p>
+                        Indicators contribute points to
+                        a rule-based risk score.
+                    </p>
+                </div>
+
+
+                <div>
+                    <strong>4. Risk Level</strong>
+                    <p>
+                        The score is classified as
+                        Low, Medium or High.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>
